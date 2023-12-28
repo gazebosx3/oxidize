@@ -5,63 +5,72 @@ import { wine, lilSumpinSumpin, doubleWhisky } from "../fake-data";
 import { Drink } from "../types";
 import SessionSummaryComponent from "./session-summary-component";
 
-export default function DrinkSessionScreen({ navigation, route }) {
-    const mockDrinks: Drink[] = [wine, lilSumpinSumpin, doubleWhisky];
-  
-    const { totalMinutes } = calculateHoursAndMinutes(
-      Date.now() - mockDrinks[2].timeEntered
+function sessionStartOrEndButton(
+  sessionStartTime: number,
+  setSessionStartTime: React.Dispatch<React.SetStateAction<number>>,
+  setSessionEndTime: React.Dispatch<React.SetStateAction<number>>
+) {
+  if (!sessionStartTime) {
+    return (
+      <Button
+        title="Start Session"
+        onPress={() => {
+          console.log("Placeholder for session Start");
+          setSessionStartTime(Date.now());
+        }}
+      />
     );
-  
-    const mockBac = calculateBAC(mockDrinks.length, 210, "male", totalMinutes);
-  
-    const [sessionStartTime, setSessionStartTime] = useState<number>(0);
-    const [sessionEndTime, setSessionEndTime] = useState<number>(0);
-    const [sessionDrinks, setSessionDrinks] = useState<Drink[]>(mockDrinks);
-    const [bac, setBac] = useState<number>(mockBac);
-  
-    function sessionStartOrEndButton() {
-      if (!sessionStartTime) {
-        return (
-          <Button
-            title="Start Session"
-            onPress={() => {
-              console.log("Placeholder for session Start");
-              setSessionStartTime(Date.now());
-            }}
-          />
-        );
-      } else {
-        return (
-          <Button
-            title="End Session"
-            onPress={() => {
-              console.log("Placeholder for session end");
-              setSessionEndTime(Date.now());
-            }}
-          />
-        );
-      }
-    }
-  
-    if (!sessionEndTime) {
-      return (
-        <View>
-          {sessionStartOrEndButton()}
-          <Button
-            title="Add Drink"
-            onPress={() => navigation.navigate("Drink")}
-          />
-        </View>
-      );
-    } else {
-      return (
-        <View>
-          <SessionSummaryComponent sessionDrinks={sessionDrinks} bac={bac} />
-        </View>
-      );
-    }
-  
-    /* 
+  } else {
+    return (
+      <Button
+        title="End Session"
+        onPress={() => {
+          console.log("Placeholder for session end");
+          setSessionEndTime(Date.now());
+        }}
+      />
+    );
+  }
+}
+
+export default function DrinkSessionScreen({ navigation, route }) {
+  const mockDrinks: Drink[] = [wine, lilSumpinSumpin, doubleWhisky];
+
+  const { totalMinutes } = calculateHoursAndMinutes(
+    Date.now() - mockDrinks[2].timeEntered
+  );
+
+  const mockBac = calculateBAC(mockDrinks.length, 210, "male", totalMinutes);
+
+  const [sessionStartTime, setSessionStartTime] = useState<number>(0);
+  const [sessionEndTime, setSessionEndTime] = useState<number>(0);
+  const [sessionDrinks, setSessionDrinks] = useState<Drink[]>(mockDrinks);
+  const [bac, setBac] = useState<number>(mockBac);
+
+  if (!sessionEndTime) {
+    return (
+      <View>
+        {sessionStartOrEndButton(
+          sessionStartTime,
+          setSessionStartTime,
+          setSessionEndTime
+        )}
+        <Button
+          title="Add Drink"
+          onPress={() => navigation.navigate("Drink", {passedDrinkId: '', sessionDrinks, setSessionDrinks})}
+        />
+        {/* List of drinks goes here */}
+      </View>
+    );
+  } else {
+    return (
+      <View>
+        <SessionSummaryComponent sessionDrinks={sessionDrinks} bac={bac} />
+      </View>
+    );
+  }
+
+  /* 
           - add drink 
           // so the addition of new drinks should recalculate the total number in the session, not erase it. BAC should always be measured in minutes and grams 
     // When you enter a drink, you should get a pop-up that says: if you drink a manhattan in the next hour, this is what will happen. If you drink a beer in the next hour, this is what will happen. Etc. 
@@ -72,4 +81,4 @@ export default function DrinkSessionScreen({ navigation, route }) {
           - running calculation of BAC
   
         */
-  }
+}

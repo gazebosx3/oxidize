@@ -27,7 +27,7 @@ export enum DRINK_TYPE {
 export interface Drink {
   name: string;
   volume: number; //in grams of alcohol
-  type: DrinkType;
+  type: DRINK_TYPE;
   timeStarted?: number;
   timeEntered: number;
 }
@@ -43,3 +43,15 @@ export interface Profile {
     sex: "M" | "F";
     weight: number;
 }
+
+export interface DrinkScreenParams {
+  passedDrinkId: string;
+  sessionDrinks: Drink[]
+  setSessionDrinks: React.Dispatch<React.SetStateAction<Drink[]>>
+}
+
+export type RootStackParamList = {
+  Home: null,
+  DrinkSession: null,
+  Drink: DrinkScreenParams
+};

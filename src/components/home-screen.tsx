@@ -7,7 +7,7 @@ export default function HomeScreen({ navigation }) {
         <Button
           title="Go to Drink Session"
           onPress={() => {
-            navigation.navigate("Drink Session");
+            navigation.navigate("DrinkSession");
           }}
         />
       </View>
