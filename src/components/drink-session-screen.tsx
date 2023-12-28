@@ -57,7 +57,13 @@ export default function DrinkSessionScreen({ navigation, route }) {
         )}
         <Button
           title="Add Drink"
-          onPress={() => navigation.navigate("Drink", {passedDrinkId: '', sessionDrinks, setSessionDrinks})}
+          onPress={() =>
+            navigation.navigate("Drink", {
+              passedDrinkId: "",
+              sessionDrinks,
+              setSessionDrinks,
+            })
+          }
         />
         {/* List of drinks goes here */}
       </View>

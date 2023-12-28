@@ -21,6 +21,7 @@ export default function DrinkScreen({ route, navigation }: DrinkProps) {
         return (
             <View>
                 Add drink should go here
+                {/* Some kind of search for drinks. Can incorporate "Add your own drink" later */}
             </View>
         )
     }
