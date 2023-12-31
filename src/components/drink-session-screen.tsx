@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Button, View } from "react-native";
-import { calculateHoursAndMinutes, calculateBAC } from "../utils/calculation-utils";
+import {
+  calculateHoursAndMinutes,
+  calculateBAC,
+} from "../utils/calculation-utils";
 import { wine, sevenPointFiveTwelveOz, doubleLiquor } from "../fake-data";
 import { UserDrink } from "../types";
 import SessionSummaryComponent from "./session-summary-component";
@@ -34,7 +37,7 @@ function sessionStartOrEndButton(
 }
 
 // TODO: fix param type
-export default function DrinkSessionScreen({ navigation, route } : any) {
+export default function DrinkSessionScreen({ navigation, route }: any) {
   // const mockDrinks: UserDrink[] = [wine, sevenPointFiveTwelveOz, doubleLiquor];
 
   // const { totalMinutes } = calculateHoursAndMinutes(
@@ -45,7 +48,7 @@ export default function DrinkSessionScreen({ navigation, route } : any) {
 
   const [sessionStartTime, setSessionStartTime] = useState<number>(0);
   const [sessionEndTime, setSessionEndTime] = useState<number>(0);
-  const [sessionDrinks, setSessionDrinks] = useState<UserDrink[]>([]);  
+  const [sessionDrinks, setSessionDrinks] = useState<UserDrink[]>([]);
 
   const { totalMinutes } = calculateHoursAndMinutes(
     Date.now() - (sessionDrinks[sessionDrinks.length].timeEntered as number)
@@ -55,14 +58,14 @@ export default function DrinkSessionScreen({ navigation, route } : any) {
 
   const [bac, setBac] = useState<number>(0);
 
-  if (!sessionEndTime) {
-    return (
-      <View>
-        {sessionStartOrEndButton(
-          sessionStartTime,
-          setSessionStartTime,
-          setSessionEndTime
-        )}
+  return (
+    <View>
+      {sessionStartOrEndButton(
+        sessionStartTime,
+        setSessionStartTime,
+        setSessionEndTime
+      )}
+      {!sessionEndTime && sessionStartTime && (
         <Button
           title="Add Drink"
           onPress={() =>
@@ -73,16 +76,39 @@ export default function DrinkSessionScreen({ navigation, route } : any) {
             })
           }
         />
-        {/* List of drinks goes here */}
-      </View>
-    );
-  } else {
-    return (
-      <View>
-        <SessionSummaryComponent sessionDrinks={sessionDrinks} bac={bac} />
-      </View>
-    );
-  }
+      )}
+      {sessionDrinks.length && }
+    </View>
+  );
+
+  // if (!sessionEndTime) {
+  //   return (
+  //     <View>
+  //       {sessionStartOrEndButton(
+  //         sessionStartTime,
+  //         setSessionStartTime,
+  //         setSessionEndTime
+  //       )}
+  // <Button
+  //   title="Add Drink"
+  //   onPress={() =>
+  //     navigation.navigate("Drink", {
+  //       passedDrinkId: "",
+  //       sessionDrinks,
+  //       setSessionDrinks,
+  //     })
+  //   }
+  // />
+  //       {/* List of drinks goes here */}
+  //     </View>
+  //   );
+  // } else {
+  //   return (
+  //     <View>
+  //       <SessionSummaryComponent sessionDrinks={sessionDrinks} bac={bac} />
+  //     </View>
+  //   );
+  // }
 
   /* 
           - add drink 

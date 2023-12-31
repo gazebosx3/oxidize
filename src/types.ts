@@ -10,7 +10,7 @@ export interface DrinkTemplate extends BaseDrink {
 
 export interface UserDrink extends BaseDrink {
   timeStarted?: number;
-  timeEntered?: number;
+  timeEntered: number;
 }
 
 export interface Session {
