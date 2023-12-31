@@ -35,18 +35,25 @@ function sessionStartOrEndButton(
 
 // TODO: fix param type
 export default function DrinkSessionScreen({ navigation, route } : any) {
-  const mockDrinks: UserDrink[] = [wine, sevenPointFiveTwelveOz, doubleLiquor];
+  // const mockDrinks: UserDrink[] = [wine, sevenPointFiveTwelveOz, doubleLiquor];
 
-  const { totalMinutes } = calculateHoursAndMinutes(
-    Date.now() - (mockDrinks[2].timeEntered as number)
-  );
+  // const { totalMinutes } = calculateHoursAndMinutes(
+  //   Date.now() - (mockDrinks[2].timeEntered as number)
+  // );
 
-  const mockBac = calculateBAC(mockDrinks.length, 210, "male", totalMinutes);
+  // const mockBac = calculateBAC(mockDrinks.length, 210, "male", totalMinutes);
 
   const [sessionStartTime, setSessionStartTime] = useState<number>(0);
   const [sessionEndTime, setSessionEndTime] = useState<number>(0);
-  const [sessionDrinks, setSessionDrinks] = useState<UserDrink[]>(mockDrinks);
-  const [bac, setBac] = useState<number>(mockBac as number);
+  const [sessionDrinks, setSessionDrinks] = useState<UserDrink[]>([]);  
+
+  const { totalMinutes } = calculateHoursAndMinutes(
+    Date.now() - (sessionDrinks[sessionDrinks.length].timeEntered as number)
+  );
+
+  // const [bac, setBac] = useState<number>(calculateBAC(sessionDrinks.length, 210, "male", totalMinutes) as number);
+
+  const [bac, setBac] = useState<number>(0);
 
   if (!sessionEndTime) {
     return (
