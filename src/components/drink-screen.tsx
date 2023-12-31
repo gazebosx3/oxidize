@@ -4,14 +4,14 @@ import { View, TextInput, StyleSheet } from "react-native";
 import { RootStackParamList } from "../types";
 import drinkDB from "../drink-data";
 
-
-
 type DrinkProps = NativeStackScreenProps<
   RootStackParamList,
   "Drink",
   "MyStack"
 >;
 export default function DrinkScreen({ route, navigation }: DrinkProps) {
+
+  console.log('!!! ', drinkDB)
 
   const [text, onChangeText] = useState("Useless Text");
   const [number, onChangeNumber] = useState("");

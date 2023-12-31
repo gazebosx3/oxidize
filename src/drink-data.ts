@@ -1,4 +1,4 @@
-import { Drink } from "./types";
+import { DrinkTemplate } from "./types";
 
 export const DrinkABVMap: Record<string, number> = {
   BEER_4: 4,
@@ -31,17 +31,15 @@ export const DrinkABVMap: Record<string, number> = {
   PIMMS_CUP: 9.5,
 };
 
-const drinkDB: Record<string, Drink> = {};
+const drinkDB = Object.entries(DrinkABVMap).map(
+  (drinkPair: [string, number], idx: number): DrinkTemplate => {
+    const [name, volume] = drinkPair;
+    // I guess this has to be initialized at 1 to work with react-fuzzy?
+    return { id: idx + 1, name, volume };
+  }
+);
 
-for (const key in DrinkABVMap) {
-  const drinkObj: Drink = {
-    name: key,
-    volume: DrinkABVMap[key],
-  };
-  drinkDB[key] = drinkObj
-}
-
-console.log(drinkDB)
+console.log(drinkDB);
 
 // Base values should be able to be accessed but not modified
-export default Object.freeze(drinkDB)
+export default Object.freeze(drinkDB);
