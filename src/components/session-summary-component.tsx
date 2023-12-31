@@ -7,6 +7,7 @@ type SessionSummaryComponentProps = { sessionDrinks: Drink[]; bac: number };
 export default function SessionSummaryComponent(props: SessionSummaryComponentProps) {
   const { sessionDrinks, bac } = props;
   const sortedSessionDrinks = sessionDrinks.sort(
+    // @ts-ignore
     (a: Drink, b: Drink) => a.timeEntered - b.timeEntered
   );
   return (
@@ -19,9 +20,11 @@ export default function SessionSummaryComponent(props: SessionSummaryComponentPr
       <ScrollView>
         {sortedSessionDrinks.map((drink: Drink) => {
           const { name, timeEntered, timeStarted } = drink;
+          // @ts-ignore
           let str = `${name} finsihed at ${new Date(timeEntered).toString()}.`;
           if (timeStarted) {
             str += ` Drink took ${
+              // @ts-ignore
               calculateHoursAndMinutes(timeEntered - timeStarted).timeString
             } to finish.`; // Todo: more details
           }
