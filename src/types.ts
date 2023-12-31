@@ -1,10 +1,11 @@
 interface BaseDrink {
   name: string;
   volume: number;
+  displayName: string;
 }
 
 export interface DrinkTemplate extends BaseDrink {
-  id: number
+  id: string
 }
 
 export interface UserDrink extends BaseDrink {

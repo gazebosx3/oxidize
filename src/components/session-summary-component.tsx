@@ -1,14 +1,14 @@
 import * as React from "react";
 import { Button, View, Text, ScrollView } from "react-native";
-import { Drink } from "../types";
+import { UserDrink } from "../types";
 import { calculateHoursAndMinutes } from "../calculation-utils";
 
-type SessionSummaryComponentProps = { sessionDrinks: Drink[]; bac: number };
+type SessionSummaryComponentProps = { sessionDrinks: UserDrink[]; bac: number };
 export default function SessionSummaryComponent(props: SessionSummaryComponentProps) {
   const { sessionDrinks, bac } = props;
   const sortedSessionDrinks = sessionDrinks.sort(
     // @ts-ignore
-    (a: Drink, b: Drink) => a.timeEntered - b.timeEntered
+    (a: UserDrink, b: UserDrink) => a.timeEntered - b.timeEntered
   );
   return (
     <>
@@ -18,12 +18,12 @@ export default function SessionSummaryComponent(props: SessionSummaryComponentPr
         Current BAC: {bac.toFixed(3)}
       </Text>
       <ScrollView>
-        {sortedSessionDrinks.map((drink: Drink) => {
+        {sortedSessionDrinks.map((drink: UserDrink) => {
           const { name, timeEntered, timeStarted } = drink;
           // @ts-ignore
           let str = `${name} finsihed at ${new Date(timeEntered).toString()}.`;
           if (timeStarted) {
-            str += ` Drink took ${
+            str += ` UserDrink took ${
               // @ts-ignore
               calculateHoursAndMinutes(timeEntered - timeStarted).timeString
             } to finish.`; // Todo: more details

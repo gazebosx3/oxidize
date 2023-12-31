@@ -1,4 +1,5 @@
 import { DrinkTemplate } from "./types";
+import { toCamelCase } from "./utils/utils";
 
 export const DrinkABVMap: Record<string, number> = {
   BEER_4: 4,
@@ -34,8 +35,8 @@ export const DrinkABVMap: Record<string, number> = {
 const drinkDB = Object.entries(DrinkABVMap).map(
   (drinkPair: [string, number], idx: number): DrinkTemplate => {
     const [name, volume] = drinkPair;
-    // I guess this has to be initialized at 1 to work with react-fuzzy?
-    return { id: idx + 1, name, volume };
+    const displayName = toCamelCase(name.replace(/_/g,' '))
+    return { id: idx.toString(), name, volume, displayName };
   }
 );
 
