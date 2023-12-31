@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Button, View } from "react-native";
-import { calculateHoursAndMinutes, calculateBAC } from "../calculation-utils";
+import { calculateHoursAndMinutes, calculateBAC } from "../utils/calculation-utils";
 import { wine, sevenPointFiveTwelveOz, doubleLiquor } from "../fake-data";
-import { Drink } from "../types";
+import { UserDrink } from "../types";
 import SessionSummaryComponent from "./session-summary-component";
 
 function sessionStartOrEndButton(
@@ -35,7 +35,7 @@ function sessionStartOrEndButton(
 
 // TODO: fix param type
 export default function DrinkSessionScreen({ navigation, route } : any) {
-  const mockDrinks: Drink[] = [wine, sevenPointFiveTwelveOz, doubleLiquor];
+  const mockDrinks: UserDrink[] = [wine, sevenPointFiveTwelveOz, doubleLiquor];
 
   const { totalMinutes } = calculateHoursAndMinutes(
     Date.now() - (mockDrinks[2].timeEntered as number)
@@ -45,7 +45,7 @@ export default function DrinkSessionScreen({ navigation, route } : any) {
 
   const [sessionStartTime, setSessionStartTime] = useState<number>(0);
   const [sessionEndTime, setSessionEndTime] = useState<number>(0);
-  const [sessionDrinks, setSessionDrinks] = useState<Drink[]>(mockDrinks);
+  const [sessionDrinks, setSessionDrinks] = useState<UserDrink[]>(mockDrinks);
   const [bac, setBac] = useState<number>(mockBac as number);
 
   if (!sessionEndTime) {

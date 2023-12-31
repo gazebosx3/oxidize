@@ -7,8 +7,10 @@ import {
   StyleSheet,
   StatusBar,
   FlatList,
+  Button,
+  GestureResponderEvent,
 } from "react-native";
-import { DrinkTemplate, RootStackParamList } from "../types";
+import { DrinkTemplate, RootStackParamList, UserDrink } from "../types";
 import drinkDB from "../drink-data";
 import { toCamelCase } from "../utils/utils";
 
@@ -18,11 +20,14 @@ type DrinkProps = NativeStackScreenProps<
   "MyStack"
 >;
 
-type ItemProps = { name: string };
+type ItemProps = {
+  name: string;
+  handleDrinkSelection: (string: string) => void;
+};
 
-const Item = ({ name }: ItemProps) => (
-  <View style={styles.item}>
-    <Text style={styles.name}>{name}</Text>
+const Item = ({ name, handleDrinkSelection }: ItemProps) => (
+  <View>
+    <Text onPress={() => handleDrinkSelection(name)}>{name}</Text>
   </View>
 );
 
@@ -30,9 +35,9 @@ function filterDrinkDb(str: string) {
   return drinkDB.filter((drink: DrinkTemplate) => {
     const { displayName } = drink;
     return (
-      displayName.startsWith(str) ||
-      displayName.toLowerCase().startsWith(str) ||
-      toCamelCase(displayName).startsWith(str)
+      displayName[0].startsWith(str) ||
+      displayName[0].toLowerCase().startsWith(str) ||
+      toCamelCase(displayName[0]).startsWith(str)
     );
   });
 }
@@ -41,7 +46,7 @@ export default function DrinkScreen({ route, navigation }: DrinkProps) {
   const { passedDrinkId, sessionDrinks, setSessionDrinks } = route.params;
 
   const [drinkId, setDrinkId] = useState(passedDrinkId);
-  const [text, onChangeText] = useState("Useless Text");
+  const [text, onChangeText] = useState("");
   const [searchResult, setSearchResult] = useState<DrinkTemplate[]>([]);
 
   const handleChangeText = (str: string) => {
@@ -49,6 +54,24 @@ export default function DrinkScreen({ route, navigation }: DrinkProps) {
     const searchRes = filterDrinkDb(str);
     setSearchResult(searchRes);
     onChangeText(str);
+  };
+
+  const handleDrinkSelection = (drinkName: string) => {
+    const selectDrinkTemplate = drinkDB.find((dt: DrinkTemplate) =>
+      dt.displayName.includes(drinkName)
+    );
+
+    if (!selectDrinkTemplate) {
+      throw new Error('This should never happen')
+    }
+
+    const {displayName, volume, name } = selectDrinkTemplate
+
+    const newUserDrink: UserDrink = { displayName, volume, name, timeEntered: Date.now() }
+    
+    setSessionDrinks([...sessionDrinks, newUserDrink])
+    setDrinkId(selectDrinkTemplate.id)
+    navigation.navigate('DrinkSession')
   };
 
   if (drinkId) {
@@ -61,13 +84,18 @@ export default function DrinkScreen({ route, navigation }: DrinkProps) {
           onChangeText={handleChangeText}
           value={text}
         />
-        {searchResult.length && (
+        {searchResult.length ? (
           <FlatList
             data={searchResult}
-            renderItem={({ item }) => <Item name={item.displayName} />}
+            renderItem={({ item }) => (
+              <Item
+                name={item.displayName[0]}
+                handleDrinkSelection={handleDrinkSelection}
+              />
+            )}
             keyExtractor={(item) => item.id}
           />
-        )}
+        ) : null}
       </View>
     );
   }
@@ -80,17 +108,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
   },
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-  },
-  item: {
-    backgroundColor: "#f9c2ff",
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  name: {
-    fontSize: 32,
-  },
+  // item: {
+  //   backgroundColor: "#f9c2ff",
+  //   padding: 20,
+  //   marginVertical: 8,
+  //   marginHorizontal: 16,
+  // },
+  // name: {
+  //   fontSize: 32,
+  // },
 });

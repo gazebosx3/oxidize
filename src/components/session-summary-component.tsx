@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button, View, Text, ScrollView } from "react-native";
 import { UserDrink } from "../types";
-import { calculateHoursAndMinutes } from "../calculation-utils";
+import { calculateHoursAndMinutes } from "../utils/calculation-utils";
 
 type SessionSummaryComponentProps = { sessionDrinks: UserDrink[]; bac: number };
 export default function SessionSummaryComponent(props: SessionSummaryComponentProps) {

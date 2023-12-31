@@ -35,7 +35,8 @@ export const DrinkABVMap: Record<string, number> = {
 const drinkDB = Object.entries(DrinkABVMap).map(
   (drinkPair: [string, number], idx: number): DrinkTemplate => {
     const [name, volume] = drinkPair;
-    const displayName = toCamelCase(name.replace(/_/g,' '))
+    // TODO: display name should be an array of possible names, so "liquor" can have display name whisky, gin, rum, scotch, rye, bourbon, etc, and I can create a list of common beers that map to BEER_5 or whatever 
+    const displayName = [toCamelCase(name.replace(/_/g,' '))]
     return { id: idx.toString(), name, volume, displayName };
   }
 );

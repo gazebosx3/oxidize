@@ -1,7 +1,7 @@
 interface BaseDrink {
   name: string;
   volume: number;
-  displayName: string;
+  displayName: string[];
 }
 
 export interface DrinkTemplate extends BaseDrink {
