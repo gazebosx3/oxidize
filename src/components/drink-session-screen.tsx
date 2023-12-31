@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, View } from "react-native";
 import { calculateHoursAndMinutes, calculateBAC } from "../calculation-utils";
-import { wine, lilSumpinSumpin, doubleWhisky } from "../fake-data";
+import { wine, sevenPointFiveTwelveOz, doubleLiquor } from "../fake-data";
 import { Drink } from "../types";
 import SessionSummaryComponent from "./session-summary-component";
 
@@ -34,7 +34,7 @@ function sessionStartOrEndButton(
 }
 
 export default function DrinkSessionScreen({ navigation, route }) {
-  const mockDrinks: Drink[] = [wine, lilSumpinSumpin, doubleWhisky];
+  const mockDrinks: Drink[] = [wine, sevenPointFiveTwelveOz, doubleLiquor];
 
   const { totalMinutes } = calculateHoursAndMinutes(
     Date.now() - mockDrinks[2].timeEntered
