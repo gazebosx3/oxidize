@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, View } from "react-native";
+import { Button, FlatList, View } from "react-native";
 import {
   calculateHoursAndMinutes,
   calculateBAC,
@@ -7,6 +7,7 @@ import {
 import { wine, sevenPointFiveTwelveOz, doubleLiquor } from "../fake-data";
 import { UserDrink } from "../types";
 import SessionSummaryComponent from "./session-summary-component";
+import SessionDrink from "./session-drink";
 
 function sessionStartOrEndButton(
   sessionStartTime: number,
@@ -50,13 +51,15 @@ export default function DrinkSessionScreen({ navigation, route }: any) {
   const [sessionEndTime, setSessionEndTime] = useState<number>(0);
   const [sessionDrinks, setSessionDrinks] = useState<UserDrink[]>([]);
 
-  const { totalMinutes } = calculateHoursAndMinutes(
-    Date.now() - (sessionDrinks[sessionDrinks.length].timeEntered as number)
-  );
+  // const { totalMinutes } = calculateHoursAndMinutes(
+  //   Date.now() - (sessionDrinks[sessionDrinks.length].timeEntered as number)
+  // );
 
   // const [bac, setBac] = useState<number>(calculateBAC(sessionDrinks.length, 210, "male", totalMinutes) as number);
 
   const [bac, setBac] = useState<number>(0);
+
+  console.log('!!! sessionDrinks is: ', sessionDrinks)
 
   return (
     <View>
@@ -77,38 +80,16 @@ export default function DrinkSessionScreen({ navigation, route }: any) {
           }
         />
       )}
-      {sessionDrinks.length && }
+      {sessionDrinks.length && (
+        <FlatList
+          data={sessionDrinks}
+          renderItem={({item}) => (
+            <SessionDrink timeEntered={item.timeEntered} name={item.name} displayName={item.displayName} volume={item.volume} />
+          )}
+        />
+      )}
     </View>
   );
-
-  // if (!sessionEndTime) {
-  //   return (
-  //     <View>
-  //       {sessionStartOrEndButton(
-  //         sessionStartTime,
-  //         setSessionStartTime,
-  //         setSessionEndTime
-  //       )}
-  // <Button
-  //   title="Add Drink"
-  //   onPress={() =>
-  //     navigation.navigate("Drink", {
-  //       passedDrinkId: "",
-  //       sessionDrinks,
-  //       setSessionDrinks,
-  //     })
-  //   }
-  // />
-  //       {/* List of drinks goes here */}
-  //     </View>
-  //   );
-  // } else {
-  //   return (
-  //     <View>
-  //       <SessionSummaryComponent sessionDrinks={sessionDrinks} bac={bac} />
-  //     </View>
-  //   );
-  // }
 
   /* 
           - add drink 
