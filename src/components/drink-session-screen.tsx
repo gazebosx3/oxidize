@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, FlatList, View } from "react-native";
+import { Button, FlatList, View, Text } from "react-native";
 import {
   calculateHoursAndMinutes,
   calculateBAC,
@@ -50,16 +50,30 @@ export default function DrinkSessionScreen({ navigation, route }: any) {
   const [sessionStartTime, setSessionStartTime] = useState<number>(0);
   const [sessionEndTime, setSessionEndTime] = useState<number>(0);
   const [sessionDrinks, setSessionDrinks] = useState<UserDrink[]>([]);
+  const [bac, setBac] = useState<string>('0');
 
-  // const { totalMinutes } = calculateHoursAndMinutes(
-  //   Date.now() - (sessionDrinks[sessionDrinks.length].timeEntered as number)
-  // );
+  let startingBac = 0;
+
+  console.log(sessionDrinks[sessionDrinks.length - 1 ])
+
+  if (
+    sessionDrinks.length &&
+    sessionDrinks[sessionDrinks.length - 1]
+  ) {
+    const { totalMinutes } = calculateHoursAndMinutes(
+      Date.now() - sessionDrinks[sessionDrinks.length - 1].timeEntered
+    );
+
+    const newBac = calculateBAC(sessionDrinks.length, 210, 'male', totalMinutes).toFixed(3) 
+
+    if (bac !== newBac) {
+      setBac(newBac)
+    }
+
+  }
 
   // const [bac, setBac] = useState<number>(calculateBAC(sessionDrinks.length, 210, "male", totalMinutes) as number);
 
-  const [bac, setBac] = useState<number>(0);
-
-  console.log('!!! sessionDrinks is: ', sessionDrinks)
 
   return (
     <View>
@@ -68,6 +82,7 @@ export default function DrinkSessionScreen({ navigation, route }: any) {
         setSessionStartTime,
         setSessionEndTime
       )}
+      <Text>Current BAC: {bac}</Text>
       {!sessionEndTime && sessionStartTime && (
         <Button
           title="Add Drink"
@@ -83,8 +98,13 @@ export default function DrinkSessionScreen({ navigation, route }: any) {
       {sessionDrinks.length && (
         <FlatList
           data={sessionDrinks}
-          renderItem={({item}) => (
-            <SessionDrink timeEntered={item.timeEntered} name={item.name} displayName={item.displayName} volume={item.volume} />
+          renderItem={({ item }) => (
+            <SessionDrink
+              timeEntered={item.timeEntered}
+              name={item.name}
+              displayName={item.displayName}
+              volume={item.volume}
+            />
           )}
         />
       )}

@@ -6,11 +6,11 @@ export function calculateBAC(
   weight: number,
   gender: string,
   minutes: number
-) {
+): number {
   // r is the Widmark factor, which is 0.55 for women and 0.68 for men
   if (gender !== "male" && gender !== "female") {
     console.error('Invalid gender. Please specify "male" or "female".');
-    return null;
+    return 0;
   }
 
   function calculateGramsOfAlcohol(ounces: number, abv: number): number {
