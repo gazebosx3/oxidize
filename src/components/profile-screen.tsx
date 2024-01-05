@@ -7,6 +7,8 @@ import {
 } from "../types";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useState } from "react";
+import { Picker } from "@react-native-picker/picker";
+import React from "react";
 
 type ProfileProps = NativeStackScreenProps<
   RootStackParamList,
@@ -18,16 +20,19 @@ type ProfileProps = NativeStackScreenProps<
 export default function ProfileScreen({ route, navigation }: ProfileProps) {
   const { setProfile, profile } = route.params;
 
-  const startingProfile = profile || {
-    sex: "Enter Sex",
-    weight: "Enter Weight",
-  };
-
   const [localSex, setLocalSex] = useState<string>("Enter Sex");
   const [localWeight, setLocalWeight] = useState<string>("Enter Weight");
   const [enteringSex, setEnteringSex] = useState<boolean>(false);
   const [enteringWeight, setEnteringWeight] = useState<boolean>(false);
 
+  // TODO: make this better
+  // React.useEffect(() => {
+  //   const unsubscribe = navigation.addListener('transitionStart', (e) => {
+  //     console.log('GOing back!!')
+  //   });
+
+  //   return unsubscribe;
+  // }, [navigation]);
   return (
     <View>
       {
@@ -42,7 +47,17 @@ export default function ProfileScreen({ route, navigation }: ProfileProps) {
             Sex: {localSex}
           </Text>
         ) : (
-          <TextInput onChangeText={setLocalSex} value={localSex} />
+          <Picker
+            selectedValue={localSex}
+            onValueChange={(itemValue, itemIndex) => {
+              console.log("Value changed");
+              setLocalSex(itemValue);
+              setEnteringSex(false);
+            }}
+          >
+            <Picker.Item label="Male" value="M" />
+            <Picker.Item label="Female" value="F" />
+          </Picker>
         )
 
         // WEIGHT
@@ -57,8 +72,25 @@ export default function ProfileScreen({ route, navigation }: ProfileProps) {
           Weight: {localWeight}
         </Text>
       ) : (
-        <TextInput onChangeText={setLocalWeight} value={localWeight} />
+        <View style={{ flexDirection: "row" }}>
+          <Text>Weight:</Text>
+          <TextInput
+            onChangeText={setLocalWeight}
+            value={localWeight}
+            onBlur={() => console.log("hi weight")}
+          />
+        </View>
       )}
+      <Button
+        title="Submit"
+        onPress={() => {
+          setProfile({
+            sex: localSex as ProfileSexOption,
+            weight: localWeight as ProfileWeightOption,
+          });
+          navigation.navigate('DrinkSession')
+        }}
+      />
     </View>
   );
 }
