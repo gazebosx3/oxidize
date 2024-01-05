@@ -20,6 +20,7 @@ type DrinkProps = NativeStackScreenProps<
   "MyStack"
 >;
 
+
 type ItemProps = {
   name: string;
   handleDrinkSelection: (string: string) => void;

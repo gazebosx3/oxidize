@@ -5,6 +5,7 @@ import HomeScreen from "./src/components/home-screen";
 import DrinkSessionScreen from "./src/components/drink-session-screen";
 import DrinkScreen from "./src/components/drink-screen";
 import {DrinkScreenParams, RootStackParamList} from './src/types'
+import ProfileScreen from "./src/components/profile-screen";
 
 
 
@@ -17,6 +18,7 @@ function App() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="DrinkSession" component={DrinkSessionScreen} />
         <Stack.Screen name="Drink" component={DrinkScreen} />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

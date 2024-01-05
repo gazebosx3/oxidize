@@ -5,7 +5,7 @@ interface BaseDrink {
 }
 
 export interface DrinkTemplate extends BaseDrink {
-  id: string
+  id: string;
 }
 
 export interface UserDrink extends BaseDrink {
@@ -20,19 +20,28 @@ export interface Session {
   bac: number;
 }
 
+export type ProfileSexOption = "M" | "F" | "Enter Sex" | '';
+export type ProfileWeightOption = number | "Enter Weight" | '';
+
 export interface Profile {
-    sex: "M" | "F";
-    weight: number;
+  sex: ProfileSexOption
+  weight: ProfileWeightOption
 }
 
 export interface DrinkScreenParams {
   passedDrinkId: string;
-  sessionDrinks: UserDrink[]
-  setSessionDrinks: React.Dispatch<React.SetStateAction<UserDrink[]>>
+  sessionDrinks: UserDrink[];
+  setSessionDrinks: React.Dispatch<React.SetStateAction<UserDrink[]>>;
+}
+
+export interface ProfileScreenParams {
+  setProfile: React.Dispatch<React.SetStateAction<Profile | null>>;
+  profile?: Profile;
 }
 
 export type RootStackParamList = {
-  Home: undefined,
-  DrinkSession: undefined,
-  Drink: DrinkScreenParams
+  Home: undefined;
+  DrinkSession: undefined;
+  Profile: ProfileScreenParams;
+  Drink: DrinkScreenParams;
 };

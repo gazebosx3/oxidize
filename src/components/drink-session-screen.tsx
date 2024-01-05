@@ -5,7 +5,7 @@ import {
   calculateBAC,
 } from "../utils/calculation-utils";
 import { wine, sevenPointFiveTwelveOz, doubleLiquor } from "../fake-data";
-import { UserDrink } from "../types";
+import { Profile, UserDrink } from "../types";
 import SessionSummaryComponent from "./session-summary-component";
 import SessionDrink from "./session-drink";
 
@@ -39,50 +39,50 @@ function sessionStartOrEndButton(
 
 // TODO: fix param type
 export default function DrinkSessionScreen({ navigation, route }: any) {
-  // const mockDrinks: UserDrink[] = [wine, sevenPointFiveTwelveOz, doubleLiquor];
-
-  // const { totalMinutes } = calculateHoursAndMinutes(
-  //   Date.now() - (mockDrinks[2].timeEntered as number)
-  // );
-
-  // const mockBac = calculateBAC(mockDrinks.length, 210, "male", totalMinutes);
-
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [sessionStartTime, setSessionStartTime] = useState<number>(0);
   const [sessionEndTime, setSessionEndTime] = useState<number>(0);
   const [sessionDrinks, setSessionDrinks] = useState<UserDrink[]>([]);
-  const [bac, setBac] = useState<string>('0');
+  const [bac, setBac] = useState<string>("0");
 
-  let startingBac = 0;
-
-  console.log(sessionDrinks[sessionDrinks.length - 1 ])
-
-  if (
-    sessionDrinks.length &&
-    sessionDrinks[sessionDrinks.length - 1]
-  ) {
+  if (sessionDrinks.length && sessionDrinks[sessionDrinks.length - 1]) {
     const { totalMinutes } = calculateHoursAndMinutes(
       Date.now() - sessionDrinks[sessionDrinks.length - 1].timeEntered
     );
 
-    const newBac = calculateBAC(sessionDrinks.length, 210, 'male', totalMinutes).toFixed(3) 
+    const newBac = calculateBAC(
+      sessionDrinks.length,
+      210,
+      "male",
+      totalMinutes
+    ).toFixed(3);
 
     if (bac !== newBac) {
-      setBac(newBac)
+      setBac(newBac);
     }
-
   }
-
-  // const [bac, setBac] = useState<number>(calculateBAC(sessionDrinks.length, 210, "male", totalMinutes) as number);
-
 
   return (
     <View>
+      {/* Add profile */}
+      {!profile && (
+        <Button
+          title="Add Sex and Weight"
+          onPress={() => navigation.navigate("Profile", { setProfile })}
+        />
+      )}
+
+      {/* Start/End session button */}
       {sessionStartOrEndButton(
         sessionStartTime,
         setSessionStartTime,
         setSessionEndTime
       )}
+
+      {/* Current BAC display */}
       <Text>Current BAC: {bac}</Text>
+
+      {/* Add drink button */}
       {!sessionEndTime && sessionStartTime && (
         <Button
           title="Add Drink"
@@ -95,6 +95,8 @@ export default function DrinkSessionScreen({ navigation, route }: any) {
           }
         />
       )}
+
+      {/* List of session drinks */}
       {sessionDrinks.length && (
         <FlatList
           data={sessionDrinks}
