@@ -42,6 +42,6 @@ export interface ProfileScreenParams {
 export type RootStackParamList = {
   Home: undefined;
   DrinkSession: undefined;
-  Profile: ProfileScreenParams;
+  Profile: undefined;
   Drink: DrinkScreenParams;
 };

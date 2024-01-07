@@ -9,6 +9,8 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useState } from "react";
 import { Picker } from "@react-native-picker/picker";
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { selectSex, selectWeight, setSexAndWeight } from "./profile-slice";
 
 type ProfileProps = NativeStackScreenProps<
   RootStackParamList,
@@ -18,8 +20,12 @@ type ProfileProps = NativeStackScreenProps<
 
 // TODO: when adding account fetch back end
 export default function ProfileScreen({ route, navigation }: ProfileProps) {
-  const { setProfile, profile } = route.params;
 
+  const sex = useSelector(selectSex);
+  const weight = useSelector(selectWeight);
+  const dispatch = useDispatch();
+
+  // TODO: eventually replace localSex and localWeight with debounced dispatch to store. For now I guess it's finef
   const [localSex, setLocalSex] = useState<string>("Enter Sex");
   const [localWeight, setLocalWeight] = useState<string>("Enter Weight");
   const [enteringSex, setEnteringSex] = useState<boolean>(false);
@@ -40,7 +46,6 @@ export default function ProfileScreen({ route, navigation }: ProfileProps) {
         !enteringSex ? (
           <Text
             onPress={() => {
-              setLocalSex("");
               setEnteringSex(true);
             }}
           >
@@ -88,6 +93,7 @@ export default function ProfileScreen({ route, navigation }: ProfileProps) {
             sex: localSex as ProfileSexOption,
             weight: localWeight as ProfileWeightOption,
           });
+          dispatch(setSexAndWeight({sex: localSex, weight: localWeight}))
           navigation.navigate('DrinkSession')
         }}
       />
