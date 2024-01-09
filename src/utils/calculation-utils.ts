@@ -8,7 +8,7 @@ export function calculateBAC(
   minutes: number
 ): number {
   // r is the Widmark factor, which is 0.55 for women and 0.68 for men
-  if (gender !== "male" && gender !== "female") {
+  if (gender !== "M" && gender !== "F") {
     console.error('Invalid gender. Please specify "male" or "female".');
     return 0;
   }

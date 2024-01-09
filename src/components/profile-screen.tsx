@@ -26,8 +26,8 @@ export default function ProfileScreen({ route, navigation }: ProfileProps) {
   const dispatch = useDispatch();
 
   // TODO: eventually replace localSex and localWeight with debounced dispatch to store. For now I guess it's finef
-  const [localSex, setLocalSex] = useState<string>("Enter Sex");
-  const [localWeight, setLocalWeight] = useState<string>("Enter Weight");
+  const [localSex, setLocalSex] = useState<string>(sex || "Enter Sex");
+  const [localWeight, setLocalWeight] = useState<string>(weight || "Enter Weight");
   const [enteringSex, setEnteringSex] = useState<boolean>(false);
   const [enteringWeight, setEnteringWeight] = useState<boolean>(false);
 

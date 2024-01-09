@@ -8,7 +8,7 @@ import { wine, sevenPointFiveTwelveOz, doubleLiquor } from "../fake-data";
 import { Profile, UserDrink } from "../types";
 import SessionSummaryComponent from "./session-summary-component";
 import SessionDrink from "./session-drink";
-import { selectSex } from "./profile-slice";
+import { selectSex, selectWeight } from "./profile-slice";
 import { useSelector } from "react-redux";
 
 function sessionStartOrEndButton(
@@ -41,28 +41,34 @@ function sessionStartOrEndButton(
 
 // TODO: fix param type
 export default function DrinkSessionScreen({ navigation, route }: any) {
+  const startingBacVal =
+    "Can't calulate BAC when no profile is set. Please set profile.";
 
-  const storeSex = useSelector(selectSex)
-  console.log('StoreSex is: ', storeSex)
-
-  
+  const sex = useSelector(selectSex);
+  const weight = useSelector(selectWeight);
+  const isValidProfile =
+    (sex === "M" || sex === "F") && !isNaN(parseFloat(weight));
 
   const [sessionStartTime, setSessionStartTime] = useState<number>(0);
   const [sessionEndTime, setSessionEndTime] = useState<number>(0);
   const [sessionDrinks, setSessionDrinks] = useState<UserDrink[]>([]);
-  const [bac, setBac] = useState<string>("0");
+  const [bac, setBac] = useState<string>(startingBacVal);
 
   if (sessionDrinks.length && sessionDrinks[sessionDrinks.length - 1]) {
     const { totalMinutes } = calculateHoursAndMinutes(
       Date.now() - sessionDrinks[sessionDrinks.length - 1].timeEntered
     );
 
-    const newBac = calculateBAC(
-      sessionDrinks.length,
-      210,
-      "male",
-      totalMinutes
-    ).toFixed(3);
+    let newBac =
+      "Can't calulate BAC when no profile is set. Please set profile.";
+    if (isValidProfile) {
+      newBac = calculateBAC(
+        sessionDrinks.length,
+        parseFloat(weight),
+        sex,
+        totalMinutes
+      ).toFixed(3);
+    }
 
     if (bac !== newBac) {
       setBac(newBac);
@@ -71,19 +77,12 @@ export default function DrinkSessionScreen({ navigation, route }: any) {
 
   return (
     <View>
-      {/* Add profile */}
-      {/* {!profile && (
+      {
         <Button
-          title="Add Sex and Weight"
-          onPress={() => navigation.navigate("Profile", { setProfile })}
+          title="Add Sex and Weight" // should say "edit" if set
+          onPress={() => navigation.navigate("Profile")} // I was gonna say should pass prop but really we just need to check if it exists in teh store
         />
-      )} */}
-            {(
-        <Button
-          title="Add Sex and Weight"
-          onPress={() => navigation.navigate("Profile")}
-        />
-      )}
+      }
 
       {/* Start/End session button */}
       {sessionStartOrEndButton(
@@ -93,8 +92,7 @@ export default function DrinkSessionScreen({ navigation, route }: any) {
       )}
 
       {/* Current BAC display */}
-      <Text>Current BAC: {bac}</Text>
-
+      {isValidProfile && sessionDrinks.length && <Text>Current BAC: {bac}</Text>}
       {/* Add drink button */}
       {!sessionEndTime && sessionStartTime && (
         <Button
