@@ -25,10 +25,10 @@ export const { setSessionDrinks, setSessionEndTime, setSessionStartTime } =
   slice.actions;
 
 export const selectSessionStartTime = (state: {
-  profile: { sessionStartTime: string };
+  profile: { sessionStartTime: number };
 }) => state.profile.sessionStartTime;
 export const selectSessionEndTime = (state: {
-  profile: { sessionEndTime: string };
+  profile: { sessionEndTime: number };
 }) => state.profile.sessionEndTime;
 export const selectSessionDrinks = (state: {
   profile: { sessionDrinks: UserDrink[] };

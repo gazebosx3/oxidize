@@ -9,49 +9,33 @@ import { Profile, UserDrink } from "../types";
 import SessionSummaryComponent from "./session-summary-component";
 import SessionDrink from "./session-drink";
 import { selectSex, selectWeight } from "./profile-slice";
-import { useSelector } from "react-redux";
-
-function sessionStartOrEndButton(
-  sessionStartTime: number,
-  setSessionStartTime: React.Dispatch<React.SetStateAction<number>>,
-  setSessionEndTime: React.Dispatch<React.SetStateAction<number>>
-) {
-  if (!sessionStartTime) {
-    return (
-      <Button
-        title="Start Session"
-        onPress={() => {
-          console.log("Placeholder for session Start");
-          setSessionStartTime(Date.now());
-        }}
-      />
-    );
-  } else {
-    return (
-      <Button
-        title="End Session"
-        onPress={() => {
-          console.log("Placeholder for session end");
-          setSessionEndTime(Date.now());
-        }}
-      />
-    );
-  }
-}
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectSessionDrinks,
+  selectSessionEndTime,
+  selectSessionStartTime,
+  setSessionEndTime,
+  setSessionStartTime,
+} from "./drink-session-screen-slice";
 
 // TODO: fix param type
 export default function DrinkSessionScreen({ navigation, route }: any) {
   const startingBacVal =
     "Can't calulate BAC when no profile is set. Please set profile.";
 
+  const dispatch = useDispatch()
+  const sessionDrinks = useSelector(selectSessionDrinks);
+  const sessionStartTime = useSelector(selectSessionStartTime);
+  const sessionEndTime = useSelector(selectSessionEndTime);
   const sex = useSelector(selectSex);
   const weight = useSelector(selectWeight);
+
   const isValidProfile =
     (sex === "M" || sex === "F") && !isNaN(parseFloat(weight));
 
-  const [sessionStartTime, setSessionStartTime] = useState<number>(0);
-  const [sessionEndTime, setSessionEndTime] = useState<number>(0);
-  const [sessionDrinks, setSessionDrinks] = useState<UserDrink[]>([]);
+  // const [sessionStartTime, setSessionStartTime] = useState<number>(0);
+  // const [sessionEndTime, setSessionEndTime] = useState<number>(0);
+  // const [sessionDrinks, setSessionDrinks] = useState<UserDrink[]>([]);
   const [bac, setBac] = useState<string>(startingBacVal);
 
   if (sessionDrinks.length && sessionDrinks[sessionDrinks.length - 1]) {
@@ -75,6 +59,28 @@ export default function DrinkSessionScreen({ navigation, route }: any) {
     }
   }
 
+  function sessionStartOrEndButton() {
+    if (!sessionStartTime) {
+      return (
+        <Button
+          title="Start Session"
+          onPress={() => {
+            dispatch(setSessionStartTime({sessionStartTime}))
+          }}
+        />
+      );
+    } else {
+      return (
+        <Button
+          title="End Session"
+          onPress={() => {
+            dispatch(setSessionEndTime({sessionEndTime}))
+          }}
+        />
+      );
+    }
+  }
+
   return (
     <View>
       {
@@ -85,23 +91,19 @@ export default function DrinkSessionScreen({ navigation, route }: any) {
       }
 
       {/* Start/End session button */}
-      {sessionStartOrEndButton(
-        sessionStartTime,
-        setSessionStartTime,
-        setSessionEndTime
-      )}
+      {sessionStartOrEndButton()}
 
       {/* Current BAC display */}
-      {isValidProfile && sessionDrinks.length && <Text>Current BAC: {bac}</Text>}
+      {isValidProfile && sessionDrinks.length && (
+        <Text>Current BAC: {bac}</Text>
+      )}
       {/* Add drink button */}
       {!sessionEndTime && sessionStartTime && (
         <Button
           title="Add Drink"
           onPress={() =>
             navigation.navigate("Drink", {
-              passedDrinkId: "",
-              sessionDrinks,
-              setSessionDrinks,
+              passedDrinkId: "", // TODO: pass the actual id
             })
           }
         />
@@ -113,6 +115,7 @@ export default function DrinkSessionScreen({ navigation, route }: any) {
           data={sessionDrinks}
           renderItem={({ item }) => (
             <SessionDrink
+              sessionDrinkId={item.sessionDrinkId}
               timeEntered={item.timeEntered}
               name={item.name}
               displayName={item.displayName}

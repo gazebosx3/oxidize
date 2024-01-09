@@ -1,6 +1,3 @@
-// // Example usage:
-// const bac = calculateBAC(4, 150, "male", 2);
-// console.log(`Estimated BAC: ${bac.toFixed(4)}%`);
 export function calculateBAC(
   drinks: number,
   weight: number,
