@@ -13,13 +13,18 @@ import {
 import { DrinkTemplate, RootStackParamList, UserDrink } from "../types";
 import drinkDB from "../drink-data";
 import { toCamelCase } from "../utils/utils";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectSessionDrinks,
+  setSessionDrinks,
+} from "./drink-session-screen-slice";
+import { v4 as uuidv4 } from "uuid";
 
 type DrinkProps = NativeStackScreenProps<
   RootStackParamList,
   "Drink",
   "MyStack"
 >;
-
 
 type ItemProps = {
   name: string;
@@ -44,9 +49,11 @@ function filterDrinkDb(str: string) {
 }
 
 export default function DrinkScreen({ route, navigation }: DrinkProps) {
-  const { passedDrinkId, sessionDrinks, setSessionDrinks } = route.params;
+  const { passedDrinkId } = route.params;
 
-  const [drinkId, setDrinkId] = useState(passedDrinkId);
+  const sessionDrinks = useSelector(selectSessionDrinks);
+  const dispatch = useDispatch();
+
   const [text, onChangeText] = useState("");
   const [searchResult, setSearchResult] = useState<DrinkTemplate[]>([]);
 
@@ -63,19 +70,25 @@ export default function DrinkScreen({ route, navigation }: DrinkProps) {
     );
 
     if (!selectDrinkTemplate) {
-      throw new Error('This should never happen')
+      throw new Error("This should never happen");
     }
 
-    const {displayName, volume, name } = selectDrinkTemplate
+    const { displayName, volume, name } = selectDrinkTemplate;
 
-    const newUserDrink: UserDrink = { displayName, volume, name, timeEntered: Date.now() }
-    
-    setSessionDrinks([...sessionDrinks, newUserDrink])
-    setDrinkId(selectDrinkTemplate.id)
-    navigation.navigate('DrinkSession')
+    const newUserDrink: UserDrink = {
+      displayName,
+      volume,
+      name,
+      timeEntered: Date.now(),
+      sessionDrinkId: uuidv4(),
+    };
+
+    const newDrinks = [...sessionDrinks, newUserDrink];
+    dispatch(setSessionDrinks({ drinks: newDrinks }));
+    navigation.navigate("DrinkSession");
   };
 
-  if (drinkId) {
+  if (passedDrinkId) {
     return <View>Edit/Remove Drink heres</View>;
   } else {
     return (

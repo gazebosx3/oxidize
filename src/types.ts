@@ -11,6 +11,7 @@ export interface DrinkTemplate extends BaseDrink {
 export interface UserDrink extends BaseDrink {
   timeStarted?: number;
   timeEntered: number;
+  sessionDrinkId: string
 }
 
 export interface Session {

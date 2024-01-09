@@ -2,11 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import { UserDrink } from "../types";
 
 export const slice = createSlice({
-  name: "profile",
+  name: "drinkSession",
   initialState: {
     sessionStartTime: 0,
     sessionEndTime: 0,
-    sessionDinks: [],
+    sessionDrinks: [] as UserDrink[],
   },
   reducers: {
     setSessionStartTime: (state, action) => {
@@ -15,8 +15,8 @@ export const slice = createSlice({
     setSessionEndTime: (state, action) => {
       state.sessionEndTime = action.payload;
     },
-    setSessionDrinks: (state, action: { payload: { drinks: UserDrink } }) => {
-      const newDrinks = [...state.sessionDinks, action.payload.drinks];
+    setSessionDrinks: (state, action: { payload: { drinks: UserDrink[] } }) => {
+      state.sessionDrinks = action.payload.drinks
     },
   },
 });
@@ -31,7 +31,7 @@ export const selectSessionEndTime = (state: {
   profile: { sessionEndTime: string };
 }) => state.profile.sessionEndTime;
 export const selectSessionDrinks = (state: {
-  profile: { sessionDrinks: string };
+  profile: { sessionDrinks: UserDrink[] };
 }) => state.profile.sessionDrinks;
 
 export default slice.reducer;
