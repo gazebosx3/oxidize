@@ -8,6 +8,8 @@ import { wine, sevenPointFiveTwelveOz, doubleLiquor } from "../fake-data";
 import { Profile, UserDrink } from "../types";
 import SessionSummaryComponent from "./session-summary-component";
 import SessionDrink from "./session-drink";
+import { selectSex } from "./profile-slice";
+import { useSelector } from "react-redux";
 
 function sessionStartOrEndButton(
   sessionStartTime: number,
@@ -39,7 +41,12 @@ function sessionStartOrEndButton(
 
 // TODO: fix param type
 export default function DrinkSessionScreen({ navigation, route }: any) {
-  const [profile, setProfile] = useState<Profile | null>(null);
+
+  const storeSex = useSelector(selectSex)
+  console.log('StoreSex is: ', storeSex)
+
+  
+
   const [sessionStartTime, setSessionStartTime] = useState<number>(0);
   const [sessionEndTime, setSessionEndTime] = useState<number>(0);
   const [sessionDrinks, setSessionDrinks] = useState<UserDrink[]>([]);
@@ -65,10 +72,16 @@ export default function DrinkSessionScreen({ navigation, route }: any) {
   return (
     <View>
       {/* Add profile */}
-      {!profile && (
+      {/* {!profile && (
         <Button
           title="Add Sex and Weight"
           onPress={() => navigation.navigate("Profile", { setProfile })}
+        />
+      )} */}
+            {(
+        <Button
+          title="Add Sex and Weight"
+          onPress={() => navigation.navigate("Profile")}
         />
       )}
 

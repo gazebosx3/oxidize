@@ -89,10 +89,10 @@ export default function ProfileScreen({ route, navigation }: ProfileProps) {
       <Button
         title="Submit"
         onPress={() => {
-          setProfile({
-            sex: localSex as ProfileSexOption,
-            weight: localWeight as ProfileWeightOption,
-          });
+          // setProfile({
+          //   sex: localSex as ProfileSexOption,
+          //   weight: localWeight as ProfileWeightOption,
+          // });
           dispatch(setSexAndWeight({sex: localSex, weight: localWeight}))
           navigation.navigate('DrinkSession')
         }}

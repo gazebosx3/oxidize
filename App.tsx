@@ -6,6 +6,8 @@ import DrinkSessionScreen from "./src/components/drink-session-screen";
 import DrinkScreen from "./src/components/drink-screen";
 import {DrinkScreenParams, RootStackParamList} from './src/types'
 import ProfileScreen from "./src/components/profile-screen";
+import { Provider } from "react-redux";
+import store from "./src/store";
 
 
 
@@ -13,6 +15,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App() {
   return (
+    <Provider store={store}>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} />
@@ -21,6 +24,7 @@ function App() {
         <Stack.Screen name="Profile" component={ProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
+    </Provider>
   );
 }
 
