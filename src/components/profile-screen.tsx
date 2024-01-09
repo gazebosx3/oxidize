@@ -10,7 +10,7 @@ import { useState } from "react";
 import { Picker } from "@react-native-picker/picker";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectSex, selectWeight, setSexAndWeight } from "./profile-slice";
+import { selectSex, selectWeight, setSexAndWeight, setWeight } from "./profile-slice";
 
 type ProfileProps = NativeStackScreenProps<
   RootStackParamList,
@@ -31,14 +31,6 @@ export default function ProfileScreen({ route, navigation }: ProfileProps) {
   const [enteringSex, setEnteringSex] = useState<boolean>(false);
   const [enteringWeight, setEnteringWeight] = useState<boolean>(false);
 
-  // TODO: make this better
-  // React.useEffect(() => {
-  //   const unsubscribe = navigation.addListener('transitionStart', (e) => {
-  //     console.log('GOing back!!')
-  //   });
-
-  //   return unsubscribe;
-  // }, [navigation]);
   return (
     <View>
       {
@@ -55,9 +47,9 @@ export default function ProfileScreen({ route, navigation }: ProfileProps) {
           <Picker
             selectedValue={localSex}
             onValueChange={(itemValue, itemIndex) => {
-              console.log("Value changed");
               setLocalSex(itemValue);
               setEnteringSex(false);
+              dispatch(setWeight(localSex))
             }}
           >
             <Picker.Item label="Male" value="M" />
@@ -69,7 +61,7 @@ export default function ProfileScreen({ route, navigation }: ProfileProps) {
       }
       {!enteringWeight ? (
         <Text
-          onPress={() => {
+          onPress={(e) => {
             setLocalWeight("");
             setEnteringWeight(true);
           }}
@@ -82,17 +74,13 @@ export default function ProfileScreen({ route, navigation }: ProfileProps) {
           <TextInput
             onChangeText={setLocalWeight}
             value={localWeight}
-            onBlur={() => console.log("hi weight")}
+            onBlur={() => dispatch(setWeight(localWeight))}
           />
         </View>
       )}
       <Button
         title="Submit"
         onPress={() => {
-          // setProfile({
-          //   sex: localSex as ProfileSexOption,
-          //   weight: localWeight as ProfileWeightOption,
-          // });
           dispatch(setSexAndWeight({sex: localSex, weight: localWeight}))
           navigation.navigate('DrinkSession')
         }}

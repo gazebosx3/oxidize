@@ -17,14 +17,12 @@ export const slice = createSlice({
       state,
       action: { payload: { sex: string; weight: string } }
     ) => {
-      console.log('Payload is: ', action)
       const { sex, weight } = action.payload;
       if (!sex || !weight) {
         throw Error("need sex and weight values for setSexAndWeight dispatch");
       }
       state.sex = sex;
       state.weight = weight
-      console.log('state is: ', state)
     },
   },
 });
