@@ -1,4 +1,5 @@
-import { Button, View, Text } from "react-native";
+import { View, Text } from "react-native";
+import { Button } from "react-native-paper";
 
 // TODO: fix type
 export default function HomeScreen({ navigation }: any) {
@@ -6,14 +7,14 @@ export default function HomeScreen({ navigation }: any) {
     
 
     return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Text>Home Screen</Text>
+      // <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <View>
         <Button
-          title="Go to Drink Session"
+        mode="contained"
           onPress={() => {
             navigation.navigate("DrinkSession");
           }}
-        />
+        >Go to Drink Session</Button>
       </View>
     );
   }

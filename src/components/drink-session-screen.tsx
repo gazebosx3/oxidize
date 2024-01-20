@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, FlatList, View, Text } from "react-native";
+import { FlatList, View } from "react-native";
 import {
   calculateHoursAndMinutes,
   calculateBAC,
@@ -17,14 +17,15 @@ import {
   setSessionEndTime,
   setSessionStartTime,
 } from "./drink-session-screen-slice";
+import { Button, Text } from "react-native-paper";
 
 // TODO: fix param type
 export default function DrinkSessionScreen({ navigation, route }: any) {
   const startingBacVal =
     "Can't calulate BAC when no profile is set. Please set profile.";
 
-  const dispatch = useDispatch()
-  const sessionDrinks = useSelector(selectSessionDrinks);
+  const dispatch = useDispatch();
+  const sessionDrinks = useSelector(selectSessionDrinks) || [];
   const sessionStartTime = useSelector(selectSessionStartTime);
   const sessionEndTime = useSelector(selectSessionEndTime);
   const sex = useSelector(selectSex);
@@ -38,7 +39,7 @@ export default function DrinkSessionScreen({ navigation, route }: any) {
   // const [sessionDrinks, setSessionDrinks] = useState<UserDrink[]>([]);
   const [bac, setBac] = useState<string>(startingBacVal);
 
-  if (sessionDrinks.length && sessionDrinks[sessionDrinks.length - 1]) {
+  if (sessionDrinks?.length && sessionDrinks[sessionDrinks.length - 1]) {
     const { totalMinutes } = calculateHoursAndMinutes(
       Date.now() - sessionDrinks[sessionDrinks.length - 1].timeEntered
     );
@@ -63,20 +64,24 @@ export default function DrinkSessionScreen({ navigation, route }: any) {
     if (!sessionStartTime) {
       return (
         <Button
-          title="Start Session"
+          mode="contained"
           onPress={() => {
-            dispatch(setSessionStartTime({sessionStartTime}))
+            dispatch(setSessionStartTime({ sessionStartTime }));
           }}
-        />
+        >
+          Start Session
+        </Button>
       );
     } else {
       return (
         <Button
-          title="End Session"
+          mode="contained"
           onPress={() => {
-            dispatch(setSessionEndTime({sessionEndTime}))
+            dispatch(setSessionEndTime({ sessionEndTime }));
           }}
-        />
+        >
+          End Session
+        </Button>
       );
     }
   }
@@ -85,44 +90,32 @@ export default function DrinkSessionScreen({ navigation, route }: any) {
     <View>
       {
         <Button
-          title="Add Sex and Weight" // should say "edit" if set
+          mode="contained"
           onPress={() => navigation.navigate("Profile")} // I was gonna say should pass prop but really we just need to check if it exists in teh store
-        />
+        >
+          Add Sex and Weight
+        </Button>
       }
 
       {/* Start/End session button */}
-      {sessionStartOrEndButton()}
+      {isValidProfile && sessionStartOrEndButton()}
 
       {/* Current BAC display */}
-      {isValidProfile && sessionDrinks.length && (
-        <Text>Current BAC: {bac}</Text>
-      )}
+      <Text>
+        {isValidProfile && sessionDrinks.length ? `Current BAC: ${bac}` : ""}
+      </Text>
+
       {/* Add drink button */}
-      {!sessionEndTime && sessionStartTime && (
+      {isValidProfile && !sessionEndTime && sessionStartTime && (
         <Button
-          title="Add Drink"
           onPress={() =>
             navigation.navigate("Drink", {
               passedDrinkId: "", // TODO: pass the actual id
             })
           }
-        />
-      )}
-
-      {/* List of session drinks */}
-      {sessionDrinks.length && (
-        <FlatList
-          data={sessionDrinks}
-          renderItem={({ item }) => (
-            <SessionDrink
-              sessionDrinkId={item.sessionDrinkId}
-              timeEntered={item.timeEntered}
-              name={item.name}
-              displayName={item.displayName}
-              volume={item.volume}
-            />
-          )}
-        />
+        >
+          Add Drink
+        </Button>
       )}
     </View>
   );
